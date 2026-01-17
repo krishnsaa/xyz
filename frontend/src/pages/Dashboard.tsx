@@ -88,7 +88,7 @@ export default function Dashboard() {
             fontWeight: 600,
           }}
         >
-          👤 {user.name}
+          👤 {user.userId}
         </div>
       </div>
 

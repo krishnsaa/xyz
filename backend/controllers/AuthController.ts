@@ -1,36 +1,61 @@
 import { JsonController, Post, Body, BadRequestError } from "routing-controllers";
 
-const USERS = {
-  user1: { password: "1234", name: "Krishna" },
-  user2: { password: "1234", name: "Aryan" },
-  user3: { password: "1234", name: "Abhi" },
-  user4: { password: "1234", name: "Arpita" },
+const USERS: Record<
+  string,
+  { password: string}
+> = {
+  krishna: { password: "1234" },
+  aryan: { password: "1234"},
+  abhi: { password: "1234"},
+  arpita: { password: "1234" },
 };
-
 @JsonController("/auth")
 export class AuthController {
   @Post("/login")
-login(@Body() body: any) {
+  login(@Body() body: any) {
     const { userId, password } = body;
-    console.log("Received:", body); 
+    console.log("Received:", body);
+    if (!userId || !password) {
+      throw new BadRequestError("User ID and password are required");
+    }
+    const user = USERS[userId];
+    if (!user) {
+      throw new BadRequestError("User not found");
+    }
+    if (user.password !== password) {
+      throw new BadRequestError("Invalid credentials");
+    }
+    const token = `token-${userId}-${Date.now()}`;
+    return {
+      token,
+      user: {
+        userId
+      },
+    };
+  }
+    @Post("/register")
+  register(@Body() body: any) {
+    const { userId, password } = body;
+
+    console.log("Received:", body);
 
     if (!userId || !password) {
-        throw new BadRequestError("Missing fields");
+      throw new BadRequestError("User ID and password are required");
     }
 
-    if (!Object.prototype.hasOwnProperty.call(USERS, userId)) {
-        throw new BadRequestError("Invalid credentials");
+    if (USERS[userId]) {
+      throw new BadRequestError("User already exists");
     }
 
-    const user = USERS[userId as keyof typeof USERS];
-
-    if (user.password !== password) {
-        throw new BadRequestError("Invalid credentials");
-    }
+    USERS[userId] = {
+      password
+    };
 
     return {
-        token: userId, 
-        user: { userId, name: user.name }
+      message: "User registered successfully",
+      user: {
+        userId,
+      },
     };
 }
 }
