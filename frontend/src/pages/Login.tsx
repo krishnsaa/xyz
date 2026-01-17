@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { api, setAuthToken } from "../api/api";
+import { api } from "../api/api";
 import { useAuth } from "../auth/AuthContext";
 
 export default function Login() {
-  const { setUser } = useAuth();
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   const [userId, setUserId] = useState("");
@@ -14,7 +14,7 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const login = async () => {
+  const handleLogin = async () => {
     if (!userId || !password || loading) return;
 
     try {
@@ -26,14 +26,7 @@ export default function Login() {
         password,
       });
 
-      setAuthToken(res.data.token);
-
-      setUser({
-        userId: res.data.user.userId,
-        name: res.data.user.name,
-        token: res.data.token,
-      });
-
+      login(res.data.userId, res.data.token);
       navigate("/dashboard");
     } catch (err) {
       if (axios.isAxiosError(err)) {
@@ -55,7 +48,6 @@ export default function Login() {
         position: "relative",
       }}
     >
-      {/* REGISTER BUTTON */}
       <div style={{ position: "absolute", top: 20, right: 20 }}>
         <button
           onClick={() => navigate("/register")}
@@ -73,7 +65,6 @@ export default function Login() {
         </button>
       </div>
 
-      {/* LOGIN CARD */}
       <div
         style={{
           display: "flex",
@@ -95,7 +86,6 @@ export default function Login() {
             🎓 Student Login
           </h2>
 
-          {/* USER ID */}
           <label style={{ fontWeight: 600, fontSize: 14 }}>Student ID</label>
           <input
             type="text"
@@ -116,7 +106,6 @@ export default function Login() {
             }}
           />
 
-          {/* PASSWORD */}
           <label
             style={{
               fontWeight: 600,
@@ -165,9 +154,8 @@ export default function Login() {
             </button>
           </div>
 
-          {/* LOGIN BUTTON */}
           <button
-            onClick={login}
+            onClick={handleLogin}
             disabled={!userId || !password || loading}
             style={{
               width: "100%",

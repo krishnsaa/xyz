@@ -3,16 +3,28 @@ import { StatsService } from "./statsServices";
 import { AchievementService } from "./achievementServices";
 
 export class EventService {
-  static async record(event: {
+  static async record(params: {
     userId: string;
     questionId: string;
     correct: boolean;
     reactionTimeMs: number;
   }) {
-    await EventModel.create(event);
+    const { userId, questionId, correct, reactionTimeMs } = params;
 
-    await StatsService.update(event);
-    await AchievementService.check(event.userId);
+    await EventModel.create({
+      userId,
+      questionId,
+      correct,
+      reactionTimeMs,
+    });
+
+    await StatsService.update({
+  userId,
+  questionId,
+  correct,
+  reactionTimeMs,
+});
+    await AchievementService.check(userId);
   }
 
   static async getAll() {

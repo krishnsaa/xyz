@@ -91,12 +91,20 @@ const DOMAINS = [
       onChange={e => setDomain(e.target.value)}
       style={{
         padding: "10px 14px",
-        borderRadius: 12,
-        border: "1px solid #cbd5f5",
+        borderRadius: 40,
+        border: "5px solid #cbd5f5",
         fontWeight: 600,
       }}
     >
-      <option value="">Select domain</option>
+      <option 
+      style={{
+        padding: "10px 14px",
+        borderRadius: 40,
+        border: "5px solid #cbd5f5",
+        fontWeight: 600,
+
+      }}
+      value="">Select domain</option>
       {DOMAINS.map(d => (
         <option key={d.value} value={d.value}>
           {d.label}
@@ -117,7 +125,7 @@ const DOMAINS = [
     </button>
   </div>
 
-  <div style={userBadge}>👤 {user.userId}</div>
+  <div style={userBadge}>👤 {user?.userId}</div>
 </div>
 
       {/* Stats */}
@@ -141,14 +149,14 @@ const DOMAINS = [
       </Section>
 
       {/* History */}
-      <Section title="📜 Recent Activity">
+      {/* <Section title="📜 Recent Activity">
         {history.slice(0, 5).map(e => (
           <div key={e._id}>
             {e.questionId} • {e.correct ? "✅" : "❌"} •{" "}
             {e.reactionTimeMs} ms
           </div>
         ))}
-      </Section>
+      </Section> */}
 
       {/* Motivation */}
       <div style={quoteBox}>💡 {getQuote()}</div>

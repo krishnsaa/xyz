@@ -66,7 +66,7 @@ export default function Quiz() {
     );
 
     await api.post("/session/answer", {
-      userId: user.userId,
+      userId: user?.userId,
       questionId: question._id.toString(),
       correct,
       reactionTimeMs,
