@@ -1,21 +1,54 @@
 import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { api } from "../api/api";
-import { questions } from "../data/questions";
 import { useAuth } from "../auth/AuthContext";
+
+export interface Question {
+  _id: string;
+  text: string;
+  options: string[];
+  correctIndex: number;
+}
 
 type AnswerState = "idle" | "correct" | "wrong";
 
 export default function Quiz() {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
+  const domain = new URLSearchParams(location.search).get("domain");
+
+  const [questions, setQuestions] = useState<Question[]>([]);
+  const [loading, setLoading] = useState(true);
   const [index, setIndex] = useState(0);
   const [answerState, setAnswerState] = useState<AnswerState>("idle");
   const [locked, setLocked] = useState(false);
 
   const startTimeRef = useRef<number>(performance.now());
+  useEffect(() => {
+    if (!domain) return;
+
+    api
+      .get(`/quiz/start?domain=${domain}`)
+      .then(res => {
+        setQuestions(res.data);
+        setLoading(false);
+        startTimeRef.current = performance.now();
+      })
+      .catch(() => {
+        setLoading(false);
+      });
+  }, [domain]);
+
+  if (loading) {
+    return <p style={{ textAlign: "center" }}>Loading quiz...</p>;
+  }
+
+  if (!questions.length) {
+    return <p style={{ textAlign: "center" }}>No questions found</p>;
+  }
 
   const question = questions[index];
   const progress = Math.round(((index + 1) / questions.length) * 100);
@@ -34,7 +67,7 @@ export default function Quiz() {
 
     await api.post("/session/answer", {
       userId: user.userId,
-      questionId: question.id,
+      questionId: question._id.toString(),
       correct,
       reactionTimeMs,
     });
@@ -51,10 +84,6 @@ export default function Quiz() {
       startTimeRef.current = performance.now();
     }, 900);
   };
-
-  useEffect(() => {
-    startTimeRef.current = performance.now();
-  }, []);
 
   return (
     <div style={{ maxWidth: 700, margin: "40px auto" }}>
@@ -81,7 +110,7 @@ export default function Quiz() {
 
       <AnimatePresence mode="wait">
         <motion.div
-          key={question.id}
+          key={question._id}
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -30 }}

@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
 export const connectDB = async () => {
-  await mongoose.connect("mongodb://127.0.0.1:27017/auth_app");
+  await mongoose.connect("mongodb://127.0.0.1:27017/quiz_app");
   console.log("MongoDB connected");
 };

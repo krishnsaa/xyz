@@ -12,8 +12,6 @@ export class AuthMiddleware implements ExpressMiddlewareInterface {
     }
 
     const token = auth.split(" ")[1];
-
-    // token format: token-userId-timestamp
     const parts = token.split("-");
 
     if (parts.length < 3) {

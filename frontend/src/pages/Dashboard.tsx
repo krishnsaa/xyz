@@ -29,6 +29,25 @@ export default function Dashboard() {
   const [summary, setSummary] = useState<any>(null);
   const [badges, setBadges] = useState<string[]>([]);
   const [history, setHistory] = useState<any[]>([]);
+  const [domain, setDomain] = useState("");
+
+const startQuiz = () => {
+  navigate(`/quiz?domain=${domain}`);
+};
+
+const DOMAINS = [
+  { value: "c", label: "C Programming" },
+  { value: "cpp", label: "C++ Programming" },
+  { value: "java", label: "Java" },
+  { value: "dsa", label: "Data Structures & Algorithms" },
+  { value: "ai", label: "Artificial Intelligence" },
+  { value: "python", label: "Python" },
+  { value: "data_analytics", label: "Data Analytics" },
+  { value: "react", label: "React" },
+  { value: "mern", label: "MERN Stack" },
+  { value: "java_app_dev", label: "Java Application Development" },
+  { value: "flutter", label: "Flutter" },
+];
 
   useEffect(() => {
     const load = async () => {
@@ -58,16 +77,48 @@ export default function Dashboard() {
   return (
     <div style={{ padding: 24, maxWidth: 900, margin: "0 auto" }}>
       {/* Header */}
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <button
-          onClick={() => navigate("/quiz")}
-          style={primaryBtn}
-        >
-          ▶ Start Quiz
-        </button>
+<div
+  style={{
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    gap: 16,
+  }}
+>
+  <div style={{ display: "flex", gap: 12 }}>
+    <select
+      value={domain}
+      onChange={e => setDomain(e.target.value)}
+      style={{
+        padding: "10px 14px",
+        borderRadius: 12,
+        border: "1px solid #cbd5f5",
+        fontWeight: 600,
+      }}
+    >
+      <option value="">Select domain</option>
+      {DOMAINS.map(d => (
+        <option key={d.value} value={d.value}>
+          {d.label}
+        </option>
+      ))}
+    </select>
 
-        <div style={userBadge}>👤 {user.userId}</div>
-      </div>
+    <button
+      onClick={startQuiz}
+      disabled={!domain}
+      style={{
+        ...primaryBtn,
+        opacity: domain ? 1 : 0.6,
+        cursor: domain ? "pointer" : "not-allowed",
+      }}
+    >
+      Start Quiz
+    </button>
+  </div>
+
+  <div style={userBadge}>👤 {user.userId}</div>
+</div>
 
       {/* Stats */}
       <div style={grid}>
