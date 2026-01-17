@@ -1,55 +1,62 @@
-import { JsonController, Post, Body, BadRequestError } from "routing-controllers";
+import {
+  JsonController,
+  Post,
+  Body,
+  BadRequestError,
+} from "routing-controllers";
+import { UserModel } from "../models/User.model";
 
-const USERS: Record<
-  string,
-  { password: string}
-> = {
-  krishna: { password: "1234" },
-  aryan: { password: "1234"},
-  abhi: { password: "1234"},
-  arpita: { password: "1234" },
-};
 @JsonController("/auth")
 export class AuthController {
+
   @Post("/login")
-  login(@Body() body: any) {
+  async login(@Body() body: any) {
     const { userId, password } = body;
     console.log("Received:", body);
+
     if (!userId || !password) {
       throw new BadRequestError("User ID and password are required");
     }
-    const user = USERS[userId];
+
+    const user = await UserModel.findOne({ userId });
+
     if (!user) {
       throw new BadRequestError("User not found");
     }
+
     if (user.password !== password) {
       throw new BadRequestError("Invalid credentials");
     }
+
     const token = `token-${userId}-${Date.now()}`;
+
     return {
       token,
       user: {
-        userId
+        userId,
       },
     };
   }
-    @Post("/register")
-  register(@Body() body: any) {
-    const { userId, password } = body;
 
+  @Post("/register")
+  async register(@Body() body: any) {
+    const { userId, password } = body;
     console.log("Received:", body);
 
     if (!userId || !password) {
       throw new BadRequestError("User ID and password are required");
     }
 
-    if (USERS[userId]) {
+    const existingUser = await UserModel.findOne({ userId });
+
+    if (existingUser) {
       throw new BadRequestError("User already exists");
     }
 
-    USERS[userId] = {
-      password
-    };
+    await UserModel.create({
+      userId,
+      password,
+    });
 
     return {
       message: "User registered successfully",
@@ -57,5 +64,5 @@ export class AuthController {
         userId,
       },
     };
-}
+  }
 }

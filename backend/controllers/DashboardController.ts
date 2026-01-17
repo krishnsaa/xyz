@@ -1,13 +1,21 @@
 import { JsonController, Get, Req, UseBefore } from "routing-controllers";
 import { AuthMiddleware } from "../middleware/AuthMiddleware";
-import { userStats, userBadges, eventStore } from "../store/memoryStore";
+import { UserStatsModel } from "../models/UserStats.model";
+import { UserBadgeModel } from "../models/UserBadge.model";
+import { EventModel } from "../models/Event.model";
 
 @JsonController("/dashboard")
 @UseBefore(AuthMiddleware)
 export class DashboardController {
-  @Get("/summary")
-  summary(@Req() req: any) {
-    const stats = userStats[req.user.userId];
+@Get("/summary")
+async summary(@Req() req: any) {
+  console.log("DASHBOARD req.user =", req.user);
+
+console.log("REQ USER ID:", req.user?.userId);
+
+const stats = await UserStatsModel.findOne({
+  userId: req.user?.userId,
+});
 
     if (!stats) {
       return { totalXP: 0, accuracy: 0, avgReactionTime: 0 };
@@ -15,18 +23,28 @@ export class DashboardController {
 
     return {
       totalXP: stats.totalXP,
-      accuracy: (stats.correct / stats.total) * 100,
-      avgReactionTime: stats.totalTime / stats.total,
+      accuracy: stats.total
+        ? (stats.correct / stats.total) * 100
+        : 0,
+      avgReactionTime: stats.total
+        ? stats.totalTime / stats.total
+        : 0,
     };
   }
 
   @Get("/badges")
-  badges(@Req() req: any) {
-    return { earned: userBadges[req.user.userId] ?? [] };
+  async badges(@Req() req: any) {
+    const badgeDoc = await UserBadgeModel.findOne({
+      userId: req.user.userId,
+    });
+
+    return { earned: badgeDoc?.badges ?? [] };
   }
 
   @Get("/history")
-  history(@Req() req: any) {
-    return eventStore.filter(e => e.userId === req.user.userId);
+  async history(@Req() req: any) {
+    return EventModel.find({ userId: req.user.userId }).sort({
+      createdAt: -1,
+    });
   }
 }

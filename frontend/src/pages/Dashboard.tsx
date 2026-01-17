@@ -5,167 +5,178 @@ import { useNavigate } from "react-router-dom";
 
 const MOTIVATION_QUOTES = {
   start: [
-    "Every expert was once a beginner. Start today and build your streak 🔥",
-    "One small step today creates a powerful habit tomorrow 🌱",
-    "Don’t wait for motivation — action creates motivation 💪",
+    "Every expert was once a beginner 🔥",
+    "Start today. Progress follows 🌱",
   ],
   low: [
-    "Progress matters more than perfection. Keep going 💙",
-    "Every attempt makes you better than yesterday 🚶‍♂️",
-    "Learning grows through effort, not instant success 📘",
+    "Progress beats perfection 💙",
+    "Effort builds mastery 🚶‍♂️",
   ],
   mid: [
-    "Great progress! A little more focus will take you far 🚀",
-    "You’re improving steadily — consistency is your superpower 📈",
+    "Great progress — keep pushing 🚀",
+    "Consistency is your strength 📈",
   ],
   high: [
-    "Excellent accuracy! Maintain the precision 🎯",
-    "You’re mastering this — stay sharp and consistent 🏆",
+    "Excellent accuracy! 🎯",
+    "You’re mastering this 🏆",
   ],
 };
 
 export default function Dashboard() {
   const { user } = useAuth();
   const navigate = useNavigate();
+
   const [summary, setSummary] = useState<any>(null);
+  const [badges, setBadges] = useState<string[]>([]);
+  const [history, setHistory] = useState<any[]>([]);
 
   useEffect(() => {
-    api.get("/dashboard/summary").then((r) => setSummary(r.data));
+    const load = async () => {
+      const [s, b, h] = await Promise.all([
+        api.get("/dashboard/summary"),
+        api.get("/dashboard/badges"),
+        api.get("/dashboard/history"),
+      ]);
+
+      setSummary(s.data);
+      setBadges(b.data.earned);
+      setHistory(h.data);
+    };
+
+    load();
   }, []);
 
-  const getMotivationQuote = () => {
+  const getQuote = () => {
     if (!summary) return "";
-    const accuracy = summary.accuracy ?? 0;
-    let pool: string[];
-
-    if (accuracy === 0) pool = MOTIVATION_QUOTES.start;
-    else if (accuracy < 50) pool = MOTIVATION_QUOTES.low;
-    else if (accuracy < 90) pool = MOTIVATION_QUOTES.mid;
-    else pool = MOTIVATION_QUOTES.high;
-
-    return pool[Math.floor(Math.random() * pool.length)];
+    const acc = summary.accuracy ?? 0;
+    if (acc === 0) return random(MOTIVATION_QUOTES.start);
+    if (acc < 50) return random(MOTIVATION_QUOTES.low);
+    if (acc < 90) return random(MOTIVATION_QUOTES.mid);
+    return random(MOTIVATION_QUOTES.high);
   };
 
   return (
-    <div
-      style={{
-        padding: 24,
-        maxWidth: 900,
-        margin: "0 auto",
-        fontFamily: "system-ui, sans-serif",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: 24,
-        }}
-      >
+    <div style={{ padding: 24, maxWidth: 900, margin: "0 auto" }}>
+      {/* Header */}
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
         <button
           onClick={() => navigate("/quiz")}
-          style={{
-            padding: "12px 20px",
-            borderRadius: 14,
-            border: "none",
-            background: "linear-gradient(135deg, #4f46e5, #6366f1)",
-            color: "#fff",
-            fontSize: 16,
-            fontWeight: 600,
-            cursor: "pointer",
-            boxShadow: "0 8px 20px rgba(79,70,229,0.3)",
-          }}
+          style={primaryBtn}
         >
           ▶ Start Quiz
         </button>
 
-        <div
-          style={{
-            padding: "10px 16px",
-            borderRadius: 14,
-            background: "#f1f5f9",
-            fontWeight: 600,
-          }}
-        >
-          👤 {user.userId}
-        </div>
+        <div style={userBadge}>👤 {user.userId}</div>
       </div>
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-          gap: 20,
-        }}
-      >
-        <div
-          style={{
-            padding: 20,
-            borderRadius: 20,
-            background: "#ffffff",
-            boxShadow: "0 10px 30px rgba(0,0,0,0.08)",
-          }}
-        >
-          <h3 style={{ margin: 0, color: "#4f46e5" }}>⭐ Total XP</h3>
-          <p style={{ fontSize: 32, fontWeight: 700, marginTop: 12 }}>
-            {summary?.totalXP ?? 0}
-          </p>
-        </div>
-
-        <div
-          style={{
-            padding: 20,
-            borderRadius: 20,
-            background: "#ffffff",
-            boxShadow: "0 10px 30px rgba(0,0,0,0.08)",
-          }}
-        >
-          <h3 style={{ margin: 0, color: "#16a34a" }}>🎯 Accuracy</h3>
-          <p style={{ fontSize: 32, fontWeight: 700, marginTop: 12 }}>
-            {summary?.accuracy ? summary.accuracy.toFixed(1) : 0}%
-          </p>
-        </div>
-
-        <div
-          style={{
-            padding: 20,
-            borderRadius: 20,
-            background: "#ffffff",
-            boxShadow: "0 10px 30px rgba(0,0,0,0.08)",
-          }}
-        >
-          <h3 style={{ margin: 0, color: "#ea580c" }}>⏱ Avg Reaction Time</h3>
-          <p style={{ fontSize: 32, fontWeight: 700, marginTop: 12 }}>
-            {summary?.avgReactionTime
-              ? summary.avgReactionTime.toFixed(0)
-              : 0}{" "}
-            ms
-          </p>
-        </div>
+      {/* Stats */}
+      <div style={grid}>
+        <StatCard title="⭐ Total XP" value={summary?.totalXP ?? 0} />
+        <StatCard
+          title="🎯 Accuracy"
+          value={`${summary?.accuracy?.toFixed(1) ?? 0}%`}
+        />
+        <StatCard
+          title="⏱ Avg Reaction"
+          value={`${summary?.avgReactionTime?.toFixed(0) ?? 0} ms`}
+        />
       </div>
 
-      <div
-        style={{
-          marginTop: 28,
-          padding: 22,
-          borderRadius: 22,
-          background: "linear-gradient(135deg, #f0f9ff, #eef2ff)",
-          boxShadow: "0 10px 30px rgba(0,0,0,0.08)",
-          textAlign: "center",
-        }}
-      >
-        <p
-          style={{
-            margin: 0,
-            fontSize: 18,
-            fontWeight: 600,
-            color: "#1e293b",
-          }}
-        >
-          💡 {getMotivationQuote()}
-        </p>
-      </div>
+      {/* Badges */}
+      <Section title="🏅 Badges">
+        {badges.length === 0
+          ? "No badges yet"
+          : badges.map(b => <Badge key={b}>{b}</Badge>)}
+      </Section>
+
+      {/* History */}
+      <Section title="📜 Recent Activity">
+        {history.slice(0, 5).map(e => (
+          <div key={e._id}>
+            {e.questionId} • {e.correct ? "✅" : "❌"} •{" "}
+            {e.reactionTimeMs} ms
+          </div>
+        ))}
+      </Section>
+
+      {/* Motivation */}
+      <div style={quoteBox}>💡 {getQuote()}</div>
     </div>
   );
 }
+
+/* ---------- Helpers ---------- */
+
+const random = (arr: string[]) =>
+  arr[Math.floor(Math.random() * arr.length)];
+
+const primaryBtn = {
+  padding: "12px 20px",
+  borderRadius: 14,
+  border: "none",
+  background: "linear-gradient(135deg,#4f46e5,#6366f1)",
+  color: "#fff",
+  fontWeight: 600,
+  cursor: "pointer",
+};
+
+const userBadge = {
+  padding: "10px 16px",
+  borderRadius: 14,
+  background: "#f1f5f9",
+  fontWeight: 600,
+};
+
+const grid = {
+  display: "grid",
+  gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))",
+  gap: 20,
+  marginTop: 24,
+};
+
+const StatCard = ({ title, value }: any) => (
+  <div style={card}>
+    <h3>{title}</h3>
+    <p style={{ fontSize: 32, fontWeight: 700 }}>{value}</p>
+  </div>
+);
+
+const card = {
+  padding: 20,
+  borderRadius: 20,
+  background: "#fff",
+  boxShadow: "0 10px 30px rgba(0,0,0,0.08)",
+};
+
+const Section = ({ title, children }: any) => (
+  <div style={{ marginTop: 28 }}>
+    <h3>{title}</h3>
+    <div>{children}</div>
+  </div>
+);
+
+const Badge = ({ children }: any) => (
+  <span
+    style={{
+      display: "inline-block",
+      marginRight: 10,
+      padding: "8px 14px",
+      borderRadius: 14,
+      background: "#22c55e",
+      color: "white",
+      fontWeight: 600,
+    }}
+  >
+    {children}
+  </span>
+);
+
+const quoteBox = {
+  marginTop: 30,
+  padding: 22,
+  borderRadius: 22,
+  background: "linear-gradient(135deg,#f0f9ff,#eef2ff)",
+  textAlign: "center",
+  fontSize: 18,
+  fontWeight: 600,
+};

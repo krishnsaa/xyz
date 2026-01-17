@@ -1,18 +1,23 @@
-import { userStats, userBadges } from "../store/memoryStore";
+import { UserStatsModel } from "../models/UserStats.model";
+import { UserBadgeModel } from "../models/UserBadge.model";
 
 export class AchievementService {
-  static check(userId: string) {
-    const stats = userStats[userId];
+  static async check(userId: string) {
+    const stats = await UserStatsModel.findOne({ userId });
     if (!stats) return;
 
-    const badges = userBadges[userId] ?? (userBadges[userId] = []);
+    const badgeDoc =
+      (await UserBadgeModel.findOne({ userId })) ??
+      (await UserBadgeModel.create({ userId, badges: [] }));
 
-    if (stats.streak >= 5 && !badges.includes("Streak Master")) {
-      badges.push("Streak Master");
+    if (stats.streak >= 5 && !badgeDoc.badges.includes("Streak Master")) {
+      badgeDoc.badges.push("Streak Master");
     }
 
-    if (stats.totalXP >= 100 && !badges.includes("XP Hunter")) {
-      badges.push("XP Hunter");
+    if (stats.totalXP >= 100 && !badgeDoc.badges.includes("XP Hunter")) {
+      badgeDoc.badges.push("XP Hunter");
     }
+
+    await badgeDoc.save();
   }
 }

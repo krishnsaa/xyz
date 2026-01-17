@@ -1,8 +1,9 @@
 import "reflect-metadata";
 import { createExpressServer } from "routing-controllers";
 import path from "path";
+import {connectDB} from "./config/database";
 const express = require("express");
-
+connectDB();
 const app = createExpressServer({
   controllers: [path.join(__dirname, "controllers", "*.ts")],
   middlewares: [path.join(__dirname, "middleware", "*.ts")],

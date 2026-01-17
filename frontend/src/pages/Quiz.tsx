@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { api } from "../api/api";
 import { questions } from "../data/questions";
 import { useAuth } from "../auth/AuthContext";
+
 type AnswerState = "idle" | "correct" | "wrong";
 
 export default function Quiz() {
@@ -19,7 +20,6 @@ export default function Quiz() {
   const question = questions[index];
   const progress = Math.round(((index + 1) / questions.length) * 100);
 
-  /* ---------- Handle Answer ---------- */
   const handleAnswer = async (optionIndex: number) => {
     if (locked) return;
 
@@ -57,7 +57,7 @@ export default function Quiz() {
   }, []);
 
   return (
-    <div style={{ maxWidth: 700, margin: "auto" }}>
+    <div style={{ maxWidth: 700, margin: "40px auto" }}>
       {/* Progress Bar */}
       <div
         style={{
@@ -79,11 +79,9 @@ export default function Quiz() {
         />
       </div>
 
-      {/* Question Card */}
       <AnimatePresence mode="wait">
         <motion.div
           key={question.id}
-          className="card"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -30 }}
@@ -92,15 +90,12 @@ export default function Quiz() {
           <h2 style={{ marginBottom: 20 }}>{question.text}</h2>
 
           {question.options.map((opt, i) => {
-            const isCorrect = i === question.correctIndex;
-            const isSelected = answerState !== "idle" && locked;
-
             let bg = "#334155";
-            if (isSelected && isCorrect) bg = "#22c55e";
-            if (isSelected && !isCorrect && i === question.correctIndex)
-              bg = "#22c55e";
-            if (isSelected && !isCorrect && !isCorrect)
-              bg = "#ef4444";
+
+            if (locked) {
+              if (i === question.correctIndex) bg = "#22c55e";
+              else if (answerState === "wrong") bg = "#ef4444";
+            }
 
             return (
               <motion.button
@@ -117,6 +112,7 @@ export default function Quiz() {
                   color: "white",
                   fontSize: 16,
                   border: "none",
+                  cursor: locked ? "default" : "pointer",
                 }}
               >
                 {opt}

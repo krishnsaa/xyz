@@ -3,5 +3,4 @@ export interface QuestionAnsweredEvent {
   questionId: string;
   correct: boolean;
   reactionTimeMs: number;
-  timestamp: number;
 }

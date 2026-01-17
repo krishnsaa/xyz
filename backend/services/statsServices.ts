@@ -1,17 +1,11 @@
 import { QuestionAnsweredEvent } from "../types/events";
-import { userStats } from "../store/memoryStore";
+import { UserStatsModel } from "../models/UserStats.model";
 
 export class StatsService {
-  static update(event: QuestionAnsweredEvent) {
+  static async update(event: QuestionAnsweredEvent) {
     const stats =
-      userStats[event.userId] ??
-      (userStats[event.userId] = {
-        totalXP: 0,
-        total: 0,
-        correct: 0,
-        totalTime: 0,
-        streak: 0,
-      });
+      (await UserStatsModel.findOne({ userId: event.userId })) ??
+      (await UserStatsModel.create({ userId: event.userId }));
 
     stats.total++;
     stats.totalTime += event.reactionTimeMs;
@@ -23,5 +17,7 @@ export class StatsService {
     } else {
       stats.streak = 0;
     }
+
+    await stats.save();
   }
 }
