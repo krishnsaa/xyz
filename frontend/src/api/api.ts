@@ -1,7 +1,9 @@
 import axios from "axios";
 
 export const api = axios.create({
-  baseURL: "https://xyz-backend-eki2.onrender.com",
+  // baseURL: "https://xyz-backend-eki2.onrender.com",
+  baseURL: "http://localhost:3000",
+
 });
 
 api.interceptors.request.use(config => {
