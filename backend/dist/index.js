@@ -13,6 +13,13 @@ dotenv_1.default.config();
 const app = (0, routing_controllers_1.createExpressServer)({
     controllers: [path_1.default.join(__dirname, "controllers", "*.js")],
     middlewares: [path_1.default.join(__dirname, "middleware", "*.js")],
+    cors: {
+        origin: [
+            "http://localhost:5173",
+            "https://your-frontend-domain.vercel.app"
+        ],
+        credentials: true,
+    },
 });
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
