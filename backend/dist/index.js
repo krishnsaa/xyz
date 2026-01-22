@@ -14,8 +14,9 @@ dotenv_1.default.config();
 (0, database_1.connectDB)();
 const app = express();
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use((0, cors_1.default)({
-    origin: "/*",
+    origin: "http://localhost:5173",
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"]
 }));
