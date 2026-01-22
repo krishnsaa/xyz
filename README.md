@@ -1,6 +1,6 @@
-# WIN7 – Nitin’s Existential Crisis Management System 🎮📊
+# Domain Based Quiz system 🎮📊
 
-WIN7 is a **student-centric, gamified performance dashboard** designed to reduce quiz-related anxiety and improve learning clarity.  
+xyz is a **student-centric, gamified performance dashboard** designed to reduce quiz-related anxiety and improve learning clarity.  
 Instead of overwhelming students with raw scores and tables, WIN7 presents performance data as a **personal Heads-Up Display (HUD)** that motivates, reassures, and guides students.
 
 This project was built as part of **WINTERNTHON** by **Team XYZ**.
@@ -149,3 +149,4 @@ This project was developed for educational and hackathon purposes.
 
 ✨ *WIN7 is not just a dashboard.  
 It’s a confidence system for students.*
+

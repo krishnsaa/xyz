@@ -19,9 +19,8 @@
   "author": "",
   "license": "ISC",
   "type": "commonjs",
-"devDependencies": {
-  "@types/cors": "^2.8.19",
-  "@types/node": "^25.0.6",
-  "ts-node": "^10.9.2"
-}
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/node": "^25.0.6"
+  }
 }
