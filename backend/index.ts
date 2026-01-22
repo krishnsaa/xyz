@@ -12,7 +12,13 @@ connectDB();
 const app = createExpressServer({
   controllers: [path.join(__dirname, "controllers", "*.js")],
   middlewares: [path.join(__dirname, "middleware", "*.js")],
-  cors: true,
+  cors: {
+    origin: [
+      "http://localhost:5173",
+      "https://your-frontend-domain.vercel.app"
+    ],
+    credentials: true,
+  },
 });
 
 
