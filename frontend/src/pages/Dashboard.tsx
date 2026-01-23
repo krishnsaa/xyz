@@ -70,9 +70,9 @@ const DOMAINS = [
   marginTop: 20,
   padding: 15,
   borderRadius: 8,
-  background: "#222",
+  background: "#e5d1d1",
   textAlign: "center",
-  fontSize: 18,
+  fontSize: 27,
   fontWeight: 600,
 };
 
