@@ -1,11 +1,10 @@
 import axios from "axios";
 
 export const api = axios.create({
-  baseURL: "https://xyz-backend-ow16.onrender.com",
-
+  baseURL: import.meta.env.VITE_API_URL,
 });
 
-api.interceptors.request.use(config => {
+api.interceptors.request.use((config) => {
   const auth = localStorage.getItem("auth");
   if (auth) {
     const { token } = JSON.parse(auth);

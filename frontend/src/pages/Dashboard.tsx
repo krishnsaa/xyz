@@ -3,6 +3,8 @@ import { api } from "../api/api";
 import { useAuth } from "../auth/AuthContext";
 import { useNavigate } from "react-router-dom";
 
+import { CSSProperties } from "react";
+
 const MOTIVATION_QUOTES = {
   start: [
     "Every expert was once a beginner 🔥",
@@ -64,6 +66,15 @@ const DOMAINS = [
 
     load();
   }, []);
+  const quoteBox: CSSProperties = {
+  marginTop: 20,
+  padding: 15,
+  borderRadius: 8,
+  background: "#222",
+  textAlign: "center",
+  fontSize: 18,
+  fontWeight: 600,
+};
 
   const getQuote = () => {
     if (!summary) return "";

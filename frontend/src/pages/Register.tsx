@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { api } from "../api/api";
+import { CSSProperties } from "react";
+
 
 export default function Register() {
   const navigate = useNavigate();
@@ -34,6 +36,11 @@ export default function Register() {
       setLoading(false);
     }
   };
+  const errorStyle: CSSProperties = {
+  marginTop: 10,
+  textAlign: "center",
+  color: "red",
+};
 
   return (
     <div
