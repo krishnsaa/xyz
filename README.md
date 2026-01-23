@@ -26,7 +26,7 @@ As a result, students *feel* like they are failing—even when they are actually
 
 ## 💡 Our Solution
 
-WIN7 replaces traditional dashboards with a **personalized, gamified student HUD** that acts like a **coach instead of a judge**.
+xyz replaces traditional dashboards with a **personalized, gamified student HUD** that acts like a **coach instead of a judge**.
 
 ### Key Ideas:
 - Replace marks with **meaningful performance indicators**
@@ -138,7 +138,7 @@ https://claude.ai/public/artifacts/4ea8c757-7e35-41c1-90d3-75ba2abbccea
 
 ## 📌 Impact
 
-WIN7 transforms performance tracking into **confidence building**.  
+xyz transforms performance tracking into **confidence building**.  
 It helps students understand *how* they are learning, not just *how much* they scored.
 
 ---
@@ -149,6 +149,6 @@ This project was developed for educational and hackathon purposes.
 
 ---
 
-✨ *WIN7 is not just a dashboard.  
+✨ *xyz is not just a dashboard.  
 It’s a confidence system for students.*
 
