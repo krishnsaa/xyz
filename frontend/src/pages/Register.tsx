@@ -102,6 +102,32 @@ export default function Register() {
           </span>
         </p>
       </div>
+      <div
+  style={{
+    marginBottom: 20,
+    textAlign: "center",
+    color: "#4f46e5",
+  }}
+>
+  <p
+    style={{
+      fontSize: 15,
+      fontWeight: 600,
+      letterSpacing: "0.5px",
+    }}
+  >
+    A Domain Based Quiz System
+  </p>
+  <p
+    style={{
+      fontSize: 13,
+      color: "#6b7280",
+      marginTop: 4,
+    }}
+  >
+    by Krishan Pal Singh
+  </p>
+</div>
     </div>
   );
 }
