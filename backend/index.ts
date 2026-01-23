@@ -12,7 +12,7 @@ const app = createExpressServer({
   controllers: [path.join(__dirname, "controllers", "*.js")],
   middlewares: [path.join(__dirname, "middleware", "*.js")],
   cors: {
-    origin: ["https://xyz-frontend-two.vercel.app", "http://localhost:5173"],
+    origin: ["https://xyz-frontend-two.vercel.app", "http://localhost:4173"],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"]
   }

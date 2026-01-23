@@ -136,7 +136,7 @@ const DOMAINS = [
     </button>
   </div>
 
-  <div style={userBadge}>👤 {user?.userId}</div>
+  {/* <div style={userBadge}>👤 {user?.userId}</div> */}
 </div>
 
       {/* Stats */}
