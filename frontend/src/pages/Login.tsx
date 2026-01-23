@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { api } from "../api/api";
 import { useAuth } from "../auth/AuthContext";
 
@@ -29,8 +28,8 @@ export default function Login() {
       login(res.data.user.userId, res.data.token);
       navigate("/dashboard");
     } catch (err) {
-      if (axios.isAxiosError(err)) {
-        setError(err.response?.data?.message || "Invalid credentials");
+    if (err instanceof Error) {
+  setError("Invalid credentials");
       } else {
         setError("Something went wrong. Please try again.");
       }
