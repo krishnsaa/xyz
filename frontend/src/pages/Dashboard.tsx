@@ -135,8 +135,6 @@ const DOMAINS = [
       Start Quiz
     </button>
   </div>
-  console.log("user:",userId);
-
   <div style={userBadge}>👤 {user?.userId}</div>
 </div>
 
