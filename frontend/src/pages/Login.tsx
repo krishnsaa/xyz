@@ -26,7 +26,7 @@ export default function Login() {
         password,
       });
 
-      login(res.data.userId, res.data.token);
+      login(res.data.user.userId, res.data.token);
       navigate("/dashboard");
     } catch (err) {
       if (axios.isAxiosError(err)) {
