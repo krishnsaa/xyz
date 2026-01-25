@@ -101,8 +101,7 @@ export default function Register() {
             Login
           </span>
         </p>
-      </div>
-      <div
+              <div
   style={{
     marginBottom: 20,
     textAlign: "center",
@@ -128,6 +127,8 @@ export default function Register() {
     by Krishan Pal Singh
   </p>
 </div>
+      </div>
+
     </div>
   );
 }
