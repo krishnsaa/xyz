@@ -77,34 +77,6 @@ xyz replaces traditional dashboards with a **personalized, gamified student HUD*
 
 ---
 
-## 🧪 Prototype Status
-
-Due to limited hackathon time, we implemented a **functional prototype** demonstrating:
-
-- Performance HUD
-- Badge system
-- Interaction history
-- Secure access flow
-- Real-time update concept
-
-This prototype validates the **core idea and user experience**.
-
----
-
-## 🚀 Future Vision
-
-We aim to evolve WIN7 into a fully immersive student dashboard that includes:
-
-- Visual **growth timelines**
-- Enhanced emotional reinforcement
-- More advanced analytics
-- Scalable deployment for institutions
-- A clean, game-like interface students enjoy using
-
-👉 Future Design Reference:  
-https://claude.ai/public/artifacts/4ea8c757-7e35-41c1-90d3-75ba2abbccea
-
----
 
 ## 🛠️ Tech Stack
 
