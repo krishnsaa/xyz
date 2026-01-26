@@ -25,6 +25,47 @@ export default function Quiz() {
   const [index, setIndex] = useState(0);
   const [answerState, setAnswerState] = useState<AnswerState>("idle");
   const [locked, setLocked] = useState(false);
+  const TIME_LIMIT=20;
+  const[timeleft,settimeleft]=useState(TIME_LIMIT);
+  useEffect(() => {
+  if (locked) return;
+
+  if (timeleft === 0) {
+    handleTimeout();
+    return;
+  }
+
+  const timer = setInterval(() => {
+    settimeleft(t => t - 1);
+  }, 1000);
+
+  return () => clearInterval(timer);
+}, [timeleft, index, locked]);
+
+const handleTimeout = async () => {
+  setLocked(true);
+  setAnswerState("wrong");
+
+  await api.post("/session/answer", {
+    userId: user?.userId,
+    questionId: question._id.toString(),
+    correct: false,
+    reactionTimeMs: TIME_LIMIT * 1000,
+  });
+
+  setTimeout(() => {
+    if (index + 1 >= questions.length) {
+      navigate("/dashboard");
+      return;
+    }
+
+    setIndex(i => i + 1);
+    setAnswerState("idle");
+    setLocked(false);
+    settimeleft(TIME_LIMIT);
+    startTimeRef.current = performance.now();
+  }, 900);
+};
 
   const startTimeRef = useRef<number>(performance.now());
   useEffect(() => {
@@ -54,6 +95,7 @@ export default function Quiz() {
   const progress = Math.round(((index + 1) / questions.length) * 100);
 
   const handleAnswer = async (optionIndex: number) => {
+    settimeleft(TIME_LIMIT);
     if (locked) return;
 
     setLocked(true);
@@ -87,8 +129,18 @@ export default function Quiz() {
 
   return (
     <div style={{ maxWidth: 700, margin: "40px auto" }}>
+      <div style={{ 
+  textAlign: "right", 
+  marginBottom: 10, 
+  fontSize: 25, 
+  fontWeight: "bold",
+  color: timeleft <= 5 ? "#ef4444" : "#38474e"
+}}>
+  ⏰ {timeleft}s
+</div>
       {/* Progress Bar */}
       <div
+      
         style={{
           height: 8,
           background: "#334155",
