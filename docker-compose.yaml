@@ -3,7 +3,7 @@ services:
     build: ./backend
     container_name: backend_app
     ports:
-      - "5000:5000"
+      - "3000:53000"
     environment:
       - MONGO_URI=${MONGO_URI}
     restart: always
@@ -13,6 +13,23 @@ services:
     container_name: frontend_app
     ports:
       - "3000:3000"
+    depends_on:
+      - backend
+    restart: alwaysservices:
+  backend:
+    build: ./backend
+    container_name: backend_app
+    ports:
+      - "3000:3000"
+    environment:
+      - MONGO_URI=${MONGO_URI}
+    restart: always
+
+  frontend:
+    build: ./frontend
+    container_name: frontend_app
+    ports:
+      - "5173:5173"
     depends_on:
       - backend
     restart: always
