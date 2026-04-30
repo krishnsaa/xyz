@@ -1,10 +1,10 @@
 {
   "compilerOptions": {
     "types": ["node"],
-    "moduleResolution": "node",
+    "moduleResolution": "node16",
     "outDir": "dist",
     "target": "ES6",
-    "module": "commonjs",
+    "module": "node16",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "strict": true,
